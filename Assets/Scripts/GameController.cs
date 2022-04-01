@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     public float TargetToWin { get; set; } = 0;
     public int Difficulty { get; set; } = 0;
 
-    public static int WorldSize = 25;
+    public const int WorldSize = 25;
 
     public void OnSceneReady()
     {

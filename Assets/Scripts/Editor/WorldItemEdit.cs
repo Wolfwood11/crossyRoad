@@ -38,7 +38,7 @@ namespace Editor
                     meshRenderer.material = baseWorldItem.Material;
                     
                     cube.transform.position = new Vector3(0, 0, i);
-                    cube.transform.localScale = new Vector3(50, 1, 1);
+                    cube.transform.localScale = new Vector3(GameController.WorldSize * 2, 1, 1);
                     cube.transform.parent = baseWorldItem.transform;
 
                     EditorUtility.SetDirty(cube);

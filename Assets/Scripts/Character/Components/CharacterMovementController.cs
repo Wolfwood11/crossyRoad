@@ -11,16 +11,16 @@ namespace Character.Components
     {
         public Action EndTurn;
 
-        public BaseGameMovableGameObject[] MovableGameObjects;
+        private BaseGameMovableGameObject[] _movableGameObjects;
 
         public void FillMovableGameObjectsList()
         {
-            MovableGameObjects = Object.FindObjectsOfType<BaseGameMovableGameObject>();
+            _movableGameObjects = Object.FindObjectsOfType<BaseGameMovableGameObject>();
         }
 
-        public void SideMove(Vector3 dir)
+        private void SideMove(Vector3 dir)
         {
-            foreach (var movableGameObject in MovableGameObjects)
+            foreach (var movableGameObject in _movableGameObjects)
             {
                 if (movableGameObject.gameObject.activeInHierarchy)
                 {

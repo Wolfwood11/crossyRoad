@@ -11,8 +11,9 @@ namespace Cars
         public CarGameObject CarAtForward { get; set; }
         
         private const float MaxDistanceToForward = 5f;
-
-
+        private const float SlowFactor = 0.8f;
+        private const float SlowZoneOutFactor = 1.2f;
+        
         public float GetSpeed()
         {
             return movementController.Speed;
@@ -22,13 +23,7 @@ namespace Cars
             base.Awake();
             RegisterComponent(movementController);
         }
-
-        // Start is called before the first frame update
-        protected override void Start()
-        {
-            base.Start();
-        }
-
+        
         // Update is called once per frame
         protected override void Update()
         {
@@ -37,19 +32,19 @@ namespace Cars
             {
                 var dist = CarAtForward.transform.position - transform.position;
                 
+                if (dist.magnitude < MaxDistanceToForward)
+                {
+                    movementController.Speed = CarAtForward.GetSpeed() * SlowFactor;
+                }
+                
+                if (dist.magnitude > SlowZoneOutFactor * MaxDistanceToForward  && movementController.Speed < movementController.InitialSpeed)
+                {
+                    movementController.Speed = movementController.InitialSpeed;
+                }
+                
                 if (dist.magnitude == 0)
                 {
                     Deactivate();
-                }
-                
-                if (dist.magnitude < MaxDistanceToForward)
-                {
-                    movementController.Speed = CarAtForward.GetSpeed() * 0.8f;
-                }
-                
-                if (dist.magnitude > 1.2f * MaxDistanceToForward  && movementController.Speed < movementController.InitialSpeed)
-                {
-                    movementController.Speed = movementController.InitialSpeed;
                 }
             }
             else if (movementController.Speed < movementController.InitialSpeed)
