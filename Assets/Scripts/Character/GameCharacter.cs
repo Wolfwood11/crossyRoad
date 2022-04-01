@@ -1,5 +1,6 @@
 using System;
 using Base;
+using Base.Enums;
 using Cars;
 using Character.Components;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Character
     {
         private readonly CharacterMovementController _movementController = new CharacterMovementController();
 
+        public override ObjectTypes ObjectType => ObjectTypes.Character;
+        
         private void OnTriggerEnter(Collider other)
         {
             var movable = other.gameObject.GetComponentInParent<BaseGameMovableGameObject>();

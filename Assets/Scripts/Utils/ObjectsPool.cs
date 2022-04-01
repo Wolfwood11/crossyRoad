@@ -45,5 +45,19 @@ namespace Utils
                 _objectsInPoll.Add(obj, newList);
             }
         }
+
+        public GameObject AddToPoll(GameObject obj)
+        {
+            if (!_objectsInPoll.ContainsKey(obj))
+            {
+                PollObject(obj);
+                return GetPolledObject(obj);
+            }
+            
+            var toPoolGameObject= GameObject.Instantiate(obj, Vector3.zero, Quaternion.identity);
+            toPoolGameObject.SetActive(false);
+            _objectsInPoll[obj].Add(toPoolGameObject);
+            return toPoolGameObject;
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace World
         [SerializeField] private GameObject[] worldItems;
 
         private const int DangerZonesCount = 3;
-        private const int StartEndZone = 5;
+        private const int StartEndZone = 7;
         private void Awake()
         {
             GenerateWorld();

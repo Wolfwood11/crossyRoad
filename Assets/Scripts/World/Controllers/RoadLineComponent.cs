@@ -35,6 +35,8 @@ namespace World.Controllers
         private void InstantiateCar(GameObject spawnPoint, float pos)
         {
             var car = GameController.Instance.GetCarGameObject();
+            if (!car) return;
+            
             car.transform.position =
                 spawnPoint.transform.position + spawnPoint.transform.forward * pos;
             car.transform.rotation = spawnPoint.transform.rotation;

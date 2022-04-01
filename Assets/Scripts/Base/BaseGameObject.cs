@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Base.Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Base
 {
-    public class BaseGameObject : MonoBehaviour
+    public abstract class BaseGameObject : MonoBehaviour
     {
         private readonly List<BaseComponent> _components = new List<BaseComponent>();
         
         private static bool _isPaused = false;
+
+        public  abstract ObjectTypes ObjectType { get; }
         protected static bool IsPaused
         {
             get => _isPaused;

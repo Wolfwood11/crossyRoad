@@ -1,4 +1,5 @@
 using Base;
+using Base.Enums;
 using Cars.Components;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace Cars
         [SerializeField]private CarMovementComponent movementController = new CarMovementComponent();
 
         public CarGameObject CarAtForward { get; set; }
+        public override ObjectTypes ObjectType => ObjectTypes.Car;
         
         private const float MaxDistanceToForward = 5f;
         private const float SlowFactor = 0.8f;
@@ -18,6 +20,7 @@ namespace Cars
         {
             return movementController.Speed;
         }
+
         protected override void Awake()
         {
             base.Awake();

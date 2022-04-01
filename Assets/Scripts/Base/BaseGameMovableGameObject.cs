@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Base
 {
-    public class BaseGameMovableGameObject : BaseGameObject
+    public abstract class BaseGameMovableGameObject : BaseGameObject
     {
+        
        
     }
 }

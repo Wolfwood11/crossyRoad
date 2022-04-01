@@ -20,19 +20,20 @@ namespace World.Controllers
                 pos += Random.Range(0, MinimalStep);
                 if (Mathf.Abs(pos) > DeadZone)
                 {
-                    InstantiateCar(pos);
+                    InstantiateTree(pos);
                     pos += Random.Range(MinimalStep, MaxStep);
                 }
             }
         }
         
-        private void InstantiateCar(float pos)
+        private void InstantiateTree(float pos)
         {
-            var car = GameController.Instance.GetTreeGameObject();
-            car.transform.position =
+            var tree = GameController.Instance.GetTreeGameObject();
+            if (!tree) return;
+            tree.transform.position =
                 Owner.transform.position - Owner.transform.right * pos + Owner.transform.up;
-            car.transform.rotation = Quaternion.identity;
-            car.SetActive(true);
+            tree.transform.rotation = Quaternion.identity;
+            tree.SetActive(true);
         }
     }
 }
