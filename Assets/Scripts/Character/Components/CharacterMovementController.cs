@@ -10,41 +10,80 @@ namespace Character.Components
     public class CharacterMovementController : BaseComponent
     {
         public Action EndTurn;
+        public Action StartTurn;
 
         private BaseGameMovableGameObject[] _movableGameObjects;
+
+        private bool isMove;
+
+        private IEnumerator MoveForward()
+        {
+            StartTurn?.Invoke();
+            isMove = true;
+            float inAction = 0;
+            while (inAction < 1)
+            {
+                var step = CalculateMovementStep(ref inAction);
+                Owner.transform.Translate(Vector3.forward * step, Space.Self);
+                yield return null;
+            }
+
+            isMove = false;
+            EndTurn?.Invoke();
+        }
+
+        private static float CalculateMovementStep(ref float inAction)
+        {
+            var step = Time.deltaTime * 7;
+            inAction += Time.deltaTime * 7;
+            step = inAction > 1 ? step + 1 - inAction : step;
+            return step;
+        }
 
         public void FillMovableGameObjectsList()
         {
             _movableGameObjects = Object.FindObjectsOfType<BaseGameMovableGameObject>();
         }
 
-        private void SideMove(Vector3 dir)
+        private IEnumerator SideMove(Vector3 dir)
         {
-            foreach (var movableGameObject in _movableGameObjects)
+            StartTurn?.Invoke();
+            isMove = true;
+            float inAction = 0;
+            while (inAction < 1)
             {
-                if (movableGameObject.gameObject.activeInHierarchy)
+                var step = CalculateMovementStep(ref inAction);
+                foreach (var movableGameObject in _movableGameObjects)
                 {
-                    movableGameObject.transform.Translate(dir, Space.World);
+                    if (movableGameObject.gameObject.activeInHierarchy)
+                    {
+                        movableGameObject.transform.Translate(dir * step, Space.World);
+                    }
                 }
+                yield return null;
             }
+
+            isMove = false;
+            EndTurn?.Invoke();
         }
         
         protected override void TickComponent()
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (isMove) return;
+            
+            if (Input.GetKeyDown(KeyCode.UpArrow) )
             {
-                Owner.transform.Translate(Vector3.forward, Space.Self);
-                EndTurn?.Invoke();
+                Owner.StartCoroutine(MoveForward());
             }
             
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                SideMove(Vector3.right);
+                Owner.StartCoroutine(SideMove(Vector3.right));
             }
             
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                SideMove(Vector3.left);
+                Owner.StartCoroutine(SideMove(Vector3.left));
             }
         }
     }

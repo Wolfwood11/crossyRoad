@@ -14,10 +14,10 @@ namespace World.Controllers
         public void StartEmitTrees()
         {
             var halfLen = GameController.WorldSize;
-            float pos = -halfLen;
-            while (pos < halfLen)
+            float pos = -halfLen + 1;
+            while (pos < halfLen - 1)
             {   
-                pos += Random.Range(0, MinimalStep);
+                pos += Mathf.Clamp(Random.Range(0, MinimalStep), 0, halfLen );
                 if (Mathf.Abs(pos) > DeadZone)
                 {
                     InstantiateTree(pos);

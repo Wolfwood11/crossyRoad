@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base;
 using Base.Enums;
 using UnityEngine;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace World
@@ -22,8 +23,7 @@ namespace World
         {
             List<GameObject> safeZones = new List<GameObject>();
             List<GameObject> dangerZones = new List<GameObject>();
-            
-            Dictionary<ZoneType, List<GameObject>> zonesItems = new Dictionary<ZoneType, List<GameObject>>();
+
             foreach (var item in worldItems)
             {
                 var baseWorldItem = item.GetComponent<BaseWorldItem>();
@@ -71,8 +71,7 @@ namespace World
 
         private static int InstantiateWorldLine(List<GameObject> list, int currentSize)
         {
-            var indexOfItem = Random.Range(0, list.Count - 1);
-            var obj = Instantiate(list[indexOfItem], new Vector3(0, 0, currentSize), Quaternion.identity);
+            var obj = Instantiate(list.RandomElement(), new Vector3(0, 0, currentSize), Quaternion.identity);
             var baseWorldItem = obj.GetComponent<BaseWorldItem>();
             currentSize += baseWorldItem.Size;
             return currentSize;

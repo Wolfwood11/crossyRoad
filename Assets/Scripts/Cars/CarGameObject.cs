@@ -20,7 +20,7 @@ namespace Cars
         {
             return movementController.Speed;
         }
-
+        
         protected override void Awake()
         {
             base.Awake();
@@ -45,7 +45,7 @@ namespace Cars
                     movementController.Speed = movementController.InitialSpeed;
                 }
                 
-                if (dist.magnitude == 0)
+                if (dist.magnitude < 2)
                 {
                     Deactivate();
                 }

@@ -17,9 +17,9 @@ namespace World.Controllers
         private const float MaxStep = 20;
         private const float DeltaStep = 0.2f;
 
-        private float _dt = 0;
+        private float _dt;
 
-        private CarGameObject _lastEmitted = null;
+        private CarGameObject _lastEmitted;
         public void StartEmitCars()
         {
             float pos = 0;
@@ -57,19 +57,6 @@ namespace World.Controllers
         {
             _dt -= Time.deltaTime;
             bool needSpawn = _dt <= 0;
-            if (_lastEmitted)
-            {
-                var distanceToLast = SpawnPoint.transform.position - _lastEmitted.transform.position;
-                if (needSpawn)
-                {
-                    needSpawn = distanceToLast.magnitude >= Random.Range(MinimalStep * 0.7f ,MinimalStep);
-                }
-                else
-                {
-                    needSpawn = distanceToLast.magnitude >= MaxStep;
-                }
-            }
-           
             if (needSpawn)
             {
                 InstantiateCar(SpawnPoint, 0);

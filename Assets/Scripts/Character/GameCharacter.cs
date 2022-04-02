@@ -12,7 +12,7 @@ namespace Character
     public class GameCharacter : BaseGameObject
     {
         private readonly CharacterMovementController _movementController = new CharacterMovementController();
-
+        
         public override ObjectTypes ObjectType => ObjectTypes.Character;
         
         private void OnTriggerEnter(Collider other)
@@ -30,11 +30,17 @@ namespace Character
             base.Awake();
             RegisterComponent(_movementController);
             _movementController.EndTurn = EndTurn;
+            _movementController.StartTurn = StartTurn;
+        }
+
+        private void StartTurn()
+        {
+          
         }
 
         private void EndTurn()
         {
-            if (transform.position.z >= GameController.Instance.TargetToWin)
+            if (Math.Abs(transform.position.z - GameController.Instance.TargetToWin) < 0.1f)
             {
                 GameController.Instance.Difficulty++;
                 GameController.Instance.ShowWinPopup();
