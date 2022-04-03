@@ -6,6 +6,6 @@ namespace Base
 {
     public abstract class BaseGameMovableGameObject : BaseGameObject
     {
-        
+        public float SpeedFactor { get; set; } = 1;
     }
 }

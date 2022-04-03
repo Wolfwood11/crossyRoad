@@ -1,4 +1,6 @@
-namespace Base
+using Base;
+
+namespace UniversalComponents
 {
     public class ObjectLiveComponent : BaseComponent
     {

@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject[] gameObjectsToPool;
     [SerializeField] public ObjectsPool objectsPool = new ObjectsPool();
 
+    [SerializeField] private GameObject loadingScreen;
+
     private int _forwardStepsToWin = 0;
     
     public int ForwardStepsToWin
@@ -59,6 +61,7 @@ public class GameController : MonoBehaviour
     
     private IEnumerator PrepareScene()
     {
+        loadingScreen.SetActive(true);
         _objectsDictionary.Clear();
         
         objectsPool.ClearPool();
@@ -104,6 +107,7 @@ public class GameController : MonoBehaviour
         _map.GenerateWorld();
         
         SceneIsReady?.Invoke();
+        loadingScreen.SetActive(false);
     }
 
     public void OnSceneReady()
@@ -157,5 +161,7 @@ public class GameController : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(loadingScreen);
+        loadingScreen.SetActive(true);
     }
 }

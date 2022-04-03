@@ -41,7 +41,7 @@ namespace World.Controllers
             var gObject = GameController.Instance.InstantiateObjectOfType(ObjectTypes.Car, position, rotation);
             if (!gObject) return;
             var car = gObject.GetComponent<CarGameObject>();
-            car.SetSpeedMFactor(_speedFactor);
+            car.SpeedFactor = _speedFactor;
         }
     }
 }

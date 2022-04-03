@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base.Enums;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UniversalComponents;
 
 namespace Base
 {
