@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
         get => _forwardStepsToWin;
         set
         {
-            if (_forwardStepsToWin != value && value == 0)
+            if (_forwardStepsToWin != value && value == 0 && !InfinityMode)
             {
                 Instance.Difficulty++;
                 Instance.ShowWinPopup();
@@ -38,6 +38,8 @@ public class GameController : MonoBehaviour
     }
     
     public int Difficulty { get; set; }
+
+    public bool InfinityMode { get; set; }
 
     public const int WorldSize = 25;
 

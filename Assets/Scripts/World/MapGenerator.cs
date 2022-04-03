@@ -39,9 +39,10 @@ namespace World
 
         private void AddLinesToWorld()
         {
-            if (_targetDangerZonesCount <= 0) return;
+            var isInfinite = GameController.Instance.InfinityMode;
+            if (_targetDangerZonesCount <= 0 && !isInfinite) return;
             int totalSteps = 0;
-            while (_currentSize < MaxVisibleWorld && _targetDangerZonesCount > 0)
+            while (_currentSize < MaxVisibleWorld && (_targetDangerZonesCount > 0 || isInfinite))
             {
                 var indexOfType = Convert.ToInt32(_lastSpawnType);
                 _targetDangerZonesCount -= indexOfType;
@@ -58,7 +59,7 @@ namespace World
             GameController.Instance.ForwardStepsToWin = newStepsToWin;
 
             var startSizeOf = _currentSize;
-            if (_targetDangerZonesCount <= 0)
+            if (_targetDangerZonesCount <= 0 && !isInfinite)
             {
                 while (_currentSize < startSizeOf + StartEndZone)
                 {
@@ -66,8 +67,6 @@ namespace World
                 }
                 GameController.Instance.ForwardStepsToWin++;
             }
-
-            
         }
 
         private static int InstantiateWorldLine(ObjectTypes type, int currentSize)
