@@ -11,6 +11,7 @@ namespace Character
 {
     public class GameCharacter : BaseGameObject
     {
+        [SerializeField] private Animator animator;
         private readonly CharacterMovementController _movementController = new CharacterMovementController();
         
         public override ObjectTypes ObjectType => ObjectTypes.Character;
@@ -20,8 +21,7 @@ namespace Character
             var movable = other.gameObject.GetComponentInParent<BaseGameMovableGameObject>();
             if (movable)
             {
-                IsPaused = true;
-                GameController.Instance.ShowLoosePopup();
+                GameController.Instance.Loose();
             }
         }
 
@@ -35,17 +35,12 @@ namespace Character
 
         private void StartTurn()
         {
-          
+            //animator.SetTrigger("Jump");
         }
 
         private void EndTurn()
         {
-            if (Math.Abs(transform.position.z - GameController.Instance.TargetToWin) < 0.1f)
-            {
-                GameController.Instance.Difficulty++;
-                GameController.Instance.ShowWinPopup();
-                IsPaused = true;
-            }
+            
         }
 
         // Start is called before the first frame update
@@ -53,7 +48,12 @@ namespace Character
         {
             base.Start();
             GameController.Instance.OnSceneReady();
-            _movementController.FillMovableGameObjectsList();
+            GameController.Instance.SceneIsReady = () => { _movementController.FillMovableGameObjectsList(); };
+           
+            GameController.Instance.objectsPool.PollUpdated += () =>
+            {
+                _movementController.FillMovableGameObjectsList();
+            };
         }
     }
 }

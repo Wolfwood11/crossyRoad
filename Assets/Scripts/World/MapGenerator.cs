@@ -4,77 +4,92 @@ using Base;
 using Base.Enums;
 using UnityEngine;
 using Utils;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 namespace World
 {
     public class MapGenerator : MonoBehaviour
     {
-        [SerializeField] private GameObject[] worldItems;
-
-        private const int DangerZonesCount = 3;
+        private const int ActiveDangerZonesCount = 3;
         private const int StartEndZone = 7;
-        private void Awake()
+        private const int MaxVisibleWorld = 15;
+
+        private int _currentSize = -StartEndZone;
+
+        readonly ObjectTypes[] _listTypes = new[] { ObjectTypes.SafeZone, ObjectTypes.Road };
+        
+        private int _targetDangerZonesCount;
+        private bool _lastSpawnType = true;
+
+        public void GenerateWorld()
         {
-            GenerateWorld();
-        }
-
-        private void GenerateWorld()
-        {
-            List<GameObject> safeZones = new List<GameObject>();
-            List<GameObject> dangerZones = new List<GameObject>();
-
-            foreach (var item in worldItems)
-            {
-                var baseWorldItem = item.GetComponent<BaseWorldItem>();
-                var zoneType = baseWorldItem.ZoneType;
-                if (zoneType == ZoneType.SafeZone)
-                {
-                    safeZones.Add(item);
-                }
-                else
-                {
-                    dangerZones.Add(item);
-                }
-            }
+            _currentSize = -StartEndZone;
+            _lastSpawnType = true;
+            _targetDangerZonesCount = ActiveDangerZonesCount + GameController.Instance.Difficulty;
             
-            var currentSize = -StartEndZone;
-            bool type = true;
-            
-            var lists = new[] { safeZones, dangerZones };
-
             // safe zone at start
-            while (currentSize <= 0)
+            while (_currentSize <= 0)
             {
-                currentSize = InstantiateWorldLine(lists[0], currentSize);
+                _currentSize += InstantiateWorldLine(_listTypes[0], _currentSize);
             }
-
-            //play field
-            var currentDangerZonesCount = 0;
-            var targetDangerZonesCount = DangerZonesCount + GameController.Instance.Difficulty;
-            while (currentDangerZonesCount < targetDangerZonesCount)
-            {
-                var indexOfType = Convert.ToInt32(type);
-                currentDangerZonesCount += indexOfType;
-                currentSize = InstantiateWorldLine(lists[indexOfType], currentSize);
-                type = !type;
-            }
-
-            GameController.Instance.TargetToWin = currentSize;
             
-            // safe zone at and
-            while (currentSize < GameController.Instance.TargetToWin + StartEndZone)
-            {
-                currentSize = InstantiateWorldLine(lists[0], currentSize);
-            }
+            AddLinesToWorld();
         }
 
-        private static int InstantiateWorldLine(List<GameObject> list, int currentSize)
+        private void AddLinesToWorld()
         {
-            var obj = Instantiate(list.RandomElement(), new Vector3(0, 0, currentSize), Quaternion.identity);
+            if (_targetDangerZonesCount <= 0) return;
+            int totalSteps = 0;
+            while (_currentSize < MaxVisibleWorld && _targetDangerZonesCount > 0)
+            {
+                var indexOfType = Convert.ToInt32(_lastSpawnType);
+                _targetDangerZonesCount -= indexOfType;
+                var addSize = InstantiateWorldLine(_listTypes[indexOfType], _currentSize);
+                _currentSize += addSize;
+                _lastSpawnType = !_lastSpawnType;
+                totalSteps += addSize;
+            }
+            
+            var currentSteps = GameController.Instance.ForwardStepsToWin >= 0
+                ? GameController.Instance.ForwardStepsToWin
+                : 0;
+            var newStepsToWin = currentSteps + totalSteps;
+            GameController.Instance.ForwardStepsToWin = newStepsToWin;
+
+            var startSizeOf = _currentSize;
+            if (_targetDangerZonesCount <= 0)
+            {
+                while (_currentSize < startSizeOf + StartEndZone)
+                {
+                    _currentSize += InstantiateWorldLine(_listTypes[0], _currentSize);
+                }
+                GameController.Instance.ForwardStepsToWin++;
+            }
+
+            
+        }
+
+        private static int InstantiateWorldLine(ObjectTypes type, int currentSize)
+        {
+            var position = new Vector3(0, 0, currentSize);
+            var rotation = Quaternion.identity;
+            
+            var obj = GameController.Instance.InstantiateObjectOfType(type, position, rotation);
+            
             var baseWorldItem = obj.GetComponent<BaseWorldItem>();
-            currentSize += baseWorldItem.Size;
-            return currentSize;
+            if (baseWorldItem)
+            {
+                baseWorldItem.EmitObjectsOfLine();
+                return baseWorldItem.Size;
+            }
+            return 0;
+        }
+
+        public void StepForward()
+        {
+            _currentSize--;
+            AddLinesToWorld();
         }
     }
 }

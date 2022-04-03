@@ -32,13 +32,13 @@ namespace Base
         
         public void UpdateComponent()
         {
-            if (!Enabled && !Owner.gameObject.activeInHierarchy) return;
+            if (!Enabled || !Owner.gameObject.activeInHierarchy) return;
             TickComponent();
         }
         
         public void FixedUpdateComponent()
         {
-            if (!Enabled && !Owner.gameObject.activeInHierarchy) return;
+            if (!Enabled || !Owner.gameObject.activeInHierarchy) return;
             FixedTickComponent();
         }
     }

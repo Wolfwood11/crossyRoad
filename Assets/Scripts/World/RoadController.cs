@@ -11,7 +11,8 @@ namespace World
         public override ObjectTypes ObjectType => ObjectTypes.Road;
         
         [SerializeField] private GameObject[] spawnPoints;
-        public void StartEmittingCars()
+
+        public override void EmitObjectsOfLine()
         {
             foreach (var spawnPoint in spawnPoints)
             {

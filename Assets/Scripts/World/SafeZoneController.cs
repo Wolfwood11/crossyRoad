@@ -9,11 +9,12 @@ namespace World
     public class SafeZoneController : BaseWorldItem
     {
         public override ObjectTypes ObjectType => ObjectTypes.SafeZone;
-        public void StartEmittingTrees()
+
+        public override void EmitObjectsOfLine()
         {
             var newRoadLine = new TreeLineComponent();
-                RegisterComponent(newRoadLine);
-                newRoadLine.StartEmitTrees();
+            RegisterComponent(newRoadLine);
+            newRoadLine.StartEmitTrees();
         }
     }
 }

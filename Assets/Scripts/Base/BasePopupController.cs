@@ -11,7 +11,8 @@ namespace Base
 
         protected virtual void OnButtonClick()
         {
-            SceneManager.LoadScene(0);
+            GameController.Instance.GenerateNewWorld(true);
+            Destroy(gameObject);
         }
         protected virtual void Awake()
         {

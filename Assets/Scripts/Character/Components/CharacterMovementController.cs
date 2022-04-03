@@ -12,78 +12,86 @@ namespace Character.Components
         public Action EndTurn;
         public Action StartTurn;
 
+        private const float CharacterSpeed = 7;
+
         private BaseGameMovableGameObject[] _movableGameObjects;
+        private BaseWorldItem[] _worldItems;
 
-        private bool isMove;
+        private bool _isMove;
 
-        private IEnumerator MoveForward()
+        private void TranslateListOfObjects(Vector3 value, BaseGameObject[] list)
         {
-            StartTurn?.Invoke();
-            isMove = true;
-            float inAction = 0;
-            while (inAction < 1)
+            foreach (var gameObject in list)
             {
-                var step = CalculateMovementStep(ref inAction);
-                Owner.transform.Translate(Vector3.forward * step, Space.Self);
-                yield return null;
+                if (gameObject.gameObject.activeInHierarchy)
+                {
+                    gameObject.transform.Translate(value, Space.World);
+                    if (Mathf.Abs(gameObject.transform.position.x) > GameController.WorldSize + 2)
+                    {
+                        var position =  gameObject.transform.position;
+                        position = new Vector3(-position.x, position.y, position.z);
+                        gameObject.transform.position = position;
+                    }
+                }
             }
-
-            isMove = false;
-            EndTurn?.Invoke();
         }
-
+        
         private static float CalculateMovementStep(ref float inAction)
         {
-            var step = Time.deltaTime * 7;
-            inAction += Time.deltaTime * 7;
+            var step = Time.deltaTime * CharacterSpeed;
+            inAction += step;
             step = inAction > 1 ? step + 1 - inAction : step;
             return step;
         }
 
         public void FillMovableGameObjectsList()
         {
-            _movableGameObjects = Object.FindObjectsOfType<BaseGameMovableGameObject>();
+            _movableGameObjects = GameController.Instance.objectsPool.GetObjectsOfType<BaseGameMovableGameObject>().ToArray();
+            _worldItems = GameController.Instance.objectsPool.GetObjectsOfType<BaseWorldItem>().ToArray();
         }
 
-        private IEnumerator SideMove(Vector3 dir)
+        private IEnumerator Move(Vector3 dir, List<BaseGameObject[]> objectsList, bool isForward)
         {
             StartTurn?.Invoke();
-            isMove = true;
+            _isMove = true;
             float inAction = 0;
             while (inAction < 1)
             {
                 var step = CalculateMovementStep(ref inAction);
-                foreach (var movableGameObject in _movableGameObjects)
+                var moveStep = dir * step;
+                foreach (var list in objectsList)
                 {
-                    if (movableGameObject.gameObject.activeInHierarchy)
-                    {
-                        movableGameObject.transform.Translate(dir * step, Space.World);
-                    }
+                    TranslateListOfObjects(moveStep, list);
                 }
+                
                 yield return null;
             }
 
-            isMove = false;
+            _isMove = false;
             EndTurn?.Invoke();
+            if (isForward)
+            {
+                GameController.Instance.StepForward();
+            }
         }
         
         protected override void TickComponent()
         {
-            if (isMove) return;
+            if (_isMove) return;
             
             if (Input.GetKeyDown(KeyCode.UpArrow) )
             {
-                Owner.StartCoroutine(MoveForward());
+                Owner.StartCoroutine(Move(-Vector3.forward, new List<BaseGameObject[]> { _worldItems, _movableGameObjects } , true));
             }
             
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                Owner.StartCoroutine(SideMove(Vector3.right));
+                Owner.StartCoroutine(Move(Vector3.right, new List<BaseGameObject[]> { _movableGameObjects } , false));
             }
             
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                Owner.StartCoroutine(SideMove(Vector3.left));
+                Owner.StartCoroutine(Move(Vector3.left, new List<BaseGameObject[]> { _movableGameObjects } , false));
             }
         }
     }

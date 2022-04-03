@@ -1,5 +1,6 @@
 using System;
 using Base;
+using Base.Enums;
 using Cars;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,62 +12,36 @@ namespace World.Controllers
     {
         public GameObject SpawnPoint { get; set; }
         
-        private const float MinDelayToSpawn = 5;
-        private const float MaxDelayToSpawn = 8;
-        private const float MinimalStep = 12;
+        private const float MinimalStep = 14;
         private const float MaxStep = 20;
-        private const float DeltaStep = 0.2f;
 
-        private float _dt;
+        private const float MinSpeedFactor = 0.7f;
+        private const float MaxSpeedFactor = 1.5f;
 
-        private CarGameObject _lastEmitted;
+        private float _speedFactor = 1;
+        
         public void StartEmitCars()
         {
-            float pos = 0;
-            while (pos < GameController.WorldSize * 2)
-            {   
-                pos += Random.Range(0, MinimalStep * DeltaStep);
+            float pos = Random.Range(0 ,MinimalStep);
+            float maxPos = GameController.WorldSize * 2 - MinimalStep + pos;
+            
+            _speedFactor = Random.Range(MinSpeedFactor, MaxSpeedFactor);
+            
+            while (pos < maxPos)
+            {
                 InstantiateCar(SpawnPoint, pos);
                 pos += Random.Range(MinimalStep, MaxStep);
             }
-            _dt = Random.Range(MinDelayToSpawn, MaxDelayToSpawn);
         }
         
         private void InstantiateCar(GameObject spawnPoint, float pos)
         {
-            var car = GameController.Instance.GetCarGameObject();
-            if (!car) return;
-            
-            car.transform.position =
-                spawnPoint.transform.position + spawnPoint.transform.forward * pos;
-            car.transform.rotation = spawnPoint.transform.rotation;
-            car.SetActive(true);
-
-            var enemy = car.GetComponent<CarGameObject>();
-            
-            if (_lastEmitted)
-            {
-                enemy.CarAtForward = _lastEmitted;
-            }
-
-            _lastEmitted = null;
-            _lastEmitted = enemy;
-        }
-        
-        private void SpawnCar()
-        {
-            _dt -= Time.deltaTime;
-            bool needSpawn = _dt <= 0;
-            if (needSpawn)
-            {
-                InstantiateCar(SpawnPoint, 0);
-                _dt = Random.Range(MinDelayToSpawn, MaxDelayToSpawn);
-            }
-        }
-        
-        protected override void TickComponent()
-        {
-            SpawnCar();
+            var position =  spawnPoint.transform.position + spawnPoint.transform.forward * pos;
+            var rotation = spawnPoint.transform.rotation;
+            var gObject = GameController.Instance.InstantiateObjectOfType(ObjectTypes.Car, position, rotation);
+            if (!gObject) return;
+            var car = gObject.GetComponent<CarGameObject>();
+            car.SetSpeedMFactor(_speedFactor);
         }
     }
 }

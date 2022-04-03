@@ -10,10 +10,10 @@ namespace Base
     {
         private readonly List<BaseComponent> _components = new List<BaseComponent>();
         
-        private static bool _isPaused = false;
+        private static bool _isPaused;
 
         public  abstract ObjectTypes ObjectType { get; }
-        protected static bool IsPaused
+        public static bool IsPaused
         {
             get => _isPaused;
             set
@@ -23,7 +23,7 @@ namespace Base
             }
         }
 
-        protected void Deactivate()
+        public void Deactivate()
         {
             gameObject.SetActive(false);
             transform.position = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -48,6 +48,8 @@ namespace Base
         protected virtual void Awake()
         {
             _components.Clear();
+            var liveComponent = new ObjectLiveComponent();
+            RegisterComponent(liveComponent);
             IsPaused = false;
         }
         
@@ -71,7 +73,7 @@ namespace Base
         // Update is called once per frame
         protected virtual void Update()
         {
-            if (_isPaused) return;
+            if (IsPaused) return;
             foreach (var component in _components)
             {
                 component.UpdateComponent();
@@ -80,7 +82,7 @@ namespace Base
 
         protected void FixedUpdate()
         {
-            if (_isPaused) return;
+            if (IsPaused) return;
             foreach (var component in _components)
             {
                 component.FixedUpdateComponent();

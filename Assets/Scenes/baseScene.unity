@@ -213,8 +213,12 @@ MonoBehaviour:
   - {fileID: 3675808190436363586, guid: 24656b4034d4c4237b4f14bfd7b68a71, type: 3}
   - {fileID: 3675808190436363586, guid: 4bdb989f561854ae5b4cf45ea0f310f5, type: 3}
   - {fileID: 3675808190436363586, guid: aad872255b37a41e484b55aca8638c73, type: 3}
+  - {fileID: 854535452997996426, guid: 15209e8d3d0234f9bb221354abd4d749, type: 3}
+  - {fileID: 854535452997996426, guid: 8652a27ab7c5c4bbd9722547d066042f, type: 3}
+  - {fileID: 854535452997996426, guid: 1441346b29c134e50977c70b185283c6, type: 3}
+  - {fileID: 854535452997996426, guid: a04f6a617266540c985b7d8ad92623be, type: 3}
   objectsPool:
-    pollSize: 30
+    pollSize: 20
 --- !u!1 &1352659385
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,11 +411,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6635501eb0ca4495e9a887caeae46da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldItems:
-  - {fileID: 854535452997996426, guid: 15209e8d3d0234f9bb221354abd4d749, type: 3}
-  - {fileID: 854535452997996426, guid: 8652a27ab7c5c4bbd9722547d066042f, type: 3}
-  - {fileID: 854535452997996426, guid: 1441346b29c134e50977c70b185283c6, type: 3}
-  - {fileID: 854535452997996426, guid: a04f6a617266540c985b7d8ad92623be, type: 3}
 --- !u!1 &2076897674
 GameObject:
   m_ObjectHideFlags: 0

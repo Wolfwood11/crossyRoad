@@ -1,5 +1,6 @@
 using System;
 using Base;
+using Base.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -28,12 +29,9 @@ namespace World.Controllers
         
         private void InstantiateTree(float pos)
         {
-            var tree = GameController.Instance.GetTreeGameObject();
-            if (!tree) return;
-            tree.transform.position =
-                Owner.transform.position - Owner.transform.right * pos + Owner.transform.up;
-            tree.transform.rotation = Quaternion.identity;
-            tree.SetActive(true);
+            var transform = Owner.transform;
+            var position = transform.position - transform.right * pos + transform.up;
+            GameController.Instance.InstantiateObjectOfType(ObjectTypes.Tree, position, Quaternion.identity);
         }
     }
 }

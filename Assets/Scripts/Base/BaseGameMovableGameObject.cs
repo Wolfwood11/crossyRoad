@@ -7,6 +7,5 @@ namespace Base
     public abstract class BaseGameMovableGameObject : BaseGameObject
     {
         
-       
     }
 }
