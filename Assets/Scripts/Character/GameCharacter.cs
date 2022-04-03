@@ -12,7 +12,7 @@ namespace Character
     public class GameCharacter : BaseGameObject
     {
         [SerializeField] private Animator animator;
-        private readonly CharacterMovementController _movementController = new CharacterMovementController();
+        private readonly CharacterMovementComponent _movementComponent = new KeyboardCharacterMovementComponent();
         
         public override ObjectTypes ObjectType => ObjectTypes.Character;
         
@@ -21,7 +21,7 @@ namespace Character
             var movable = other.gameObject.GetComponentInParent<BaseGameMovableGameObject>();
             if (movable)
             {
-                _movementController.StopMovement();
+                _movementComponent.StopMovement();
                 GameController.Instance.Loose();
             }
         }
@@ -29,9 +29,9 @@ namespace Character
         protected override void Awake()
         {
             base.Awake();
-            RegisterComponent(_movementController);
-            _movementController.EndTurn = EndTurn;
-            _movementController.StartTurn = StartTurn;
+            RegisterComponent(_movementComponent);
+            _movementComponent.EndTurn = EndTurn;
+            _movementComponent.StartTurn = StartTurn;
         }
 
         private void StartTurn()
@@ -52,13 +52,13 @@ namespace Character
             GameController.Instance.SceneIsReady = () => 
             { 
                 StopAllCoroutines();
-                _movementController.StopMovement();
-                _movementController.FillMovableGameObjectsList(); 
+                _movementComponent.StopMovement();
+                _movementComponent.FillMovableGameObjectsList(); 
             };
            
             GameController.Instance.objectsPool.PollUpdated += () =>
             {
-                _movementController.FillMovableGameObjectsList();
+                _movementComponent.FillMovableGameObjectsList();
             };
         }
     }

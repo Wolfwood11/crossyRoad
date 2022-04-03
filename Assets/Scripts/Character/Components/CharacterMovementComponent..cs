@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Character.Components
 {
-    public class CharacterMovementController : BaseComponent
+    public abstract class CharacterMovementComponent : BaseComponent
     {
         public Action EndTurn;
         public Action StartTurn;
@@ -77,22 +77,26 @@ namespace Character.Components
                 GameController.Instance.StepForward();
             }
         }
+
+        protected abstract bool IsForwardInput();
+        protected abstract bool IsLeftInput();
+        protected abstract bool IsRightInput();
         
         protected override void TickComponent()
         {
             if (_isMove) return;
             
-            if (Input.GetKeyDown(KeyCode.UpArrow) )
+            if (IsForwardInput())
             {
                 Owner.StartCoroutine(Move(-Vector3.forward, new List<BaseGameObject[]> { _worldItems, _movableGameObjects } , true));
             }
             
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (IsLeftInput())
             {
                 Owner.StartCoroutine(Move(Vector3.right, new List<BaseGameObject[]> { _movableGameObjects } , false));
             }
             
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (IsRightInput())
             {
                 Owner.StartCoroutine(Move(Vector3.left, new List<BaseGameObject[]> { _movableGameObjects } , false));
             }
