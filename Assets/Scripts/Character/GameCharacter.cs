@@ -21,8 +21,8 @@ namespace Character
             var movable = other.gameObject.GetComponentInParent<BaseGameMovableGameObject>();
             if (movable)
             {
+                _movementController.StopMovement();
                 GameController.Instance.Loose();
-                StopAllCoroutines();
             }
         }
 
@@ -52,6 +52,7 @@ namespace Character
             GameController.Instance.SceneIsReady = () => 
             { 
                 StopAllCoroutines();
+                _movementController.StopMovement();
                 _movementController.FillMovableGameObjectsList(); 
             };
            

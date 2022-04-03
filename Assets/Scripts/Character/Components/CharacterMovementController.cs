@@ -17,7 +17,16 @@ namespace Character.Components
         private BaseGameMovableGameObject[] _movableGameObjects;
         private BaseWorldItem[] _worldItems;
 
+
+        public void StopMovement()
+        {
+            _isMove = false;
+            MoveProgress = 1;
+            Owner.StopAllCoroutines();
+        }
         private bool _isMove;
+
+        private float MoveProgress { get; set;  } = 1;
 
         private void TranslateListOfObjects(Vector3 value, BaseGameObject[] list)
         {
@@ -30,11 +39,11 @@ namespace Character.Components
             }
         }
         
-        private static float CalculateMovementStep(ref float inAction)
+        private float CalculateMovementStep()
         {
-            var step = Time.deltaTime * CharacterSpeed;
-            inAction += step;
-            step = inAction > 1 ? step + 1 - inAction : step;
+            float step = Time.deltaTime * CharacterSpeed;
+            MoveProgress += step;
+            step = MoveProgress > 1 ? step + 1 - MoveProgress : step;
             return step;
         }
 
@@ -48,10 +57,10 @@ namespace Character.Components
         {
             StartTurn?.Invoke();
             _isMove = true;
-            float inAction = 0;
-            while (inAction < 1)
+            MoveProgress = 0;
+            while (MoveProgress < 1)
             {
-                var step = CalculateMovementStep(ref inAction);
+                var step = CalculateMovementStep();
                 var moveStep = dir * step;
                 foreach (var list in objectsList)
                 {
