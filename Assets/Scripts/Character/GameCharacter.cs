@@ -22,6 +22,7 @@ namespace Character
             if (movable)
             {
                 GameController.Instance.Loose();
+                StopAllCoroutines();
             }
         }
 
@@ -48,7 +49,11 @@ namespace Character
         {
             base.Start();
             GameController.Instance.OnSceneReady();
-            GameController.Instance.SceneIsReady = () => { _movementController.FillMovableGameObjectsList(); };
+            GameController.Instance.SceneIsReady = () => 
+            { 
+                StopAllCoroutines();
+                _movementController.FillMovableGameObjectsList(); 
+            };
            
             GameController.Instance.objectsPool.PollUpdated += () =>
             {
