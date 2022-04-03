@@ -17,7 +17,7 @@ namespace World
 
         private int _currentSize = -StartEndZone;
 
-        readonly ObjectTypes[] _listTypes = new[] { ObjectTypes.SafeZone, ObjectTypes.Road };
+        readonly ObjectTypes[] _listTypes = { ObjectTypes.SafeZone, ObjectTypes.Road };
         
         private int _targetDangerZonesCount;
         private bool _lastSpawnType = true;
@@ -61,6 +61,7 @@ namespace World
             var startSizeOf = _currentSize;
             if (_targetDangerZonesCount <= 0 && !isInfinite)
             {
+                // safe zone at end of level 
                 while (_currentSize < startSizeOf + StartEndZone)
                 {
                     _currentSize += InstantiateWorldLine(_listTypes[0], _currentSize);
