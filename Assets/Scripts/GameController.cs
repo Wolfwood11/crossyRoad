@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private GameObject loadingScreen;
 
-    private int _forwardStepsToWin = 0;
+    private int _forwardStepsToWin;
     
     public int ForwardStepsToWin
     {
