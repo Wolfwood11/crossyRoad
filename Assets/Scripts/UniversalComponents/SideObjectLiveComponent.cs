@@ -10,7 +10,7 @@ namespace UniversalComponents
         protected override void TickComponent()
         {
             base.TickComponent();
-            if (!(Mathf.Abs(Owner.transform.position.x) > GameController.WorldSize + 2)) return;
+            if (!(Mathf.Abs(Owner.transform.position.x) > GameController.WorldSize)) return;
             
             var position = Owner.transform.position;
             var pos = Mathf.Clamp(-position.x, -GameController.WorldSize, GameController.WorldSize);

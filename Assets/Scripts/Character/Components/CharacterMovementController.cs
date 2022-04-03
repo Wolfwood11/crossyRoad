@@ -26,12 +26,6 @@ namespace Character.Components
                 if (gameObject.gameObject.activeInHierarchy)
                 {
                     gameObject.transform.Translate(value, Space.World);
-                    if (Mathf.Abs(gameObject.transform.position.x) > GameController.WorldSize + 2)
-                    {
-                        var position =  gameObject.transform.position;
-                        position = new Vector3(-position.x, position.y, position.z);
-                        gameObject.transform.position = position;
-                    }
                 }
             }
         }
